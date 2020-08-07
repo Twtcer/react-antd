@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-export class List extends Component {
+export class NotFound extends Component {
     render() {
         return (
             <div>
-                <h1>List</h1>
+                404 - NotFound
             </div>
         )
     }
 }
 
-export default List
+export default NotFound

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
 
-export class index extends Component {
+export class Index extends Component {
     render() {
         return (
             <div>
-                
+                <h1>dash borad index</h1>
             </div>
         )
     }
 }
 
-export default index
+export default Index
