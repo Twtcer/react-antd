@@ -1,13 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
+import React from 'react'; 
 import './App.css';
 import { Switch, Redirect, Route } from 'react-router-dom';
 import { adminRoutes } from './routes';
-import Base from './components/base'
+import MasterPage from './components/base'
 
 function App() {
   return (
-    <Base>  
+    <MasterPage>  
        <Switch>
        {
           adminRoutes.map(route => { 
@@ -18,7 +17,7 @@ function App() {
         }
         <Redirect to='/404' />
        </Switch>
-    </Base>
+    </MasterPage>
   );
 }
 
