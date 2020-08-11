@@ -31,6 +31,6 @@ export default class App extends Component {
           <Redirect to='/404' />
         </Switch>
       </MasterPage>
-    ) : (<Redirect to="/Login" />);
+    ) : (<Redirect to="/login" />);
   } 
 }

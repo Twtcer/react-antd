@@ -1,10 +1,12 @@
-import React from 'react'; 
-import { Layout, Menu, Breadcrumb, Dropdown,Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';  
-import {withRouter} from 'react-router-dom';
-import Icon from '@ant-design/icons';  
+import React from 'react';
+import { Layout, Menu, Breadcrumb, Dropdown, Avatar, Badge,message } from 'antd';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { withRouter } from 'react-router-dom';
+import Icon from '@ant-design/icons';
 import './index.css';
-import { adminRoutes } from '../../routes/index'; 
+import { adminRoutes } from '../../routes/index';
+import { clearToken } from '../../utils/auth';
+
 const { Header, Content, Footer, Sider } = Layout;
 
 class Index extends React.Component {
@@ -13,32 +15,34 @@ class Index extends React.Component {
     };
 
     render() {
-        const routes = adminRoutes.filter(route => route.isShow); 
+        const routes = adminRoutes.filter(route => route.isShow);
         const menu = (
-            <Menu>
-              <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-                    个人中心
-                </a>
-              </Menu.Item>
-              <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer">
-                    退出
-                </a>
-              </Menu.Item> 
+            <Menu onClick={(p) => {
+                if (p.key === "logout") {
+                    clearToken();
+                    this.props.history.push('/login');
+                }
+                else{
+                    message.info(p.key);
+                }
+            }}>
+                <Menu.Item key="notify">通知</Menu.Item>
+                <Menu.Item key="self">个人中心</Menu.Item>
+                <Menu.Item key="logout">退出</Menu.Item>
             </Menu>
-          );
+        );
         return (
             <Layout>
-                <Header className="header" style={{background:'#1890ff'}}>
+                <Header className="header" style={{ background: '#1890ff' }}>
                     <div className="logo" >
                         <img className='logo-img' alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
-                        <p className='logo-title'>react+antd</p>
                     </div>
                     <Dropdown overlay={menu} placement="bottomRight">
                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                         <p className="user-action">  admin </p>
-                           <DownOutlined />
+                            <p className="user-action"> <Badge count={1}>
+                                <Avatar icon={<UserOutlined />} />
+                            </Badge> Admin </p>
+                            <DownOutlined />
                         </a>
                     </Dropdown>
                 </Header>
@@ -51,12 +55,13 @@ class Index extends React.Component {
                     <Layout className="site-layout-background" style={{ padding: '16px 0' }}>
                         <Sider className="site-layout-background" width={200}>
                             <Menu
-                                mode="inline" 
+                                mode="inline"
                                 style={{ height: '100%' }}
-                            > 
-                            {routes.map(r => { 
-                                return (<Menu.Item key={r.path} onClick={r=>this.props.history.push(r.key)}><Icon /> {r.title}</Menu.Item>) }
-                                )}  
+                            >
+                                {routes.map(r => {
+                                    return (<Menu.Item key={r.path} onClick={r => this.props.history.push(r.key)}><Icon /> {r.title}</Menu.Item>)
+                                }
+                                )}
                             </Menu>
                         </Sider>
                         <Content style={{ padding: '0 24px', minHeight: 280 }}>     {this.props.children}</Content>
@@ -67,6 +72,6 @@ class Index extends React.Component {
             </Layout>
         );
     }
-} 
+}
 
 export default withRouter(Index);
