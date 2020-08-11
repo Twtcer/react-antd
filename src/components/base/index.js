@@ -1,14 +1,10 @@
-import React from 'react';
-
-import { Layout, Menu, Breadcrumb } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-
-import './index.css';
-import { adminRoutes } from '../../routes/index';
-
+import React from 'react'; 
+import { Layout, Menu, Breadcrumb, Dropdown,Button } from 'antd';
+import { DownOutlined } from '@ant-design/icons';  
 import {withRouter} from 'react-router-dom';
-
-const { SubMenu } = Menu;
+import Icon from '@ant-design/icons';  
+import './index.css';
+import { adminRoutes } from '../../routes/index'; 
 const { Header, Content, Footer, Sider } = Layout;
 
 class Index extends React.Component {
@@ -17,8 +13,21 @@ class Index extends React.Component {
     };
 
     render() {
-        const routes = adminRoutes.filter(route => route.isShow);
-        console.log(routes);
+        const routes = adminRoutes.filter(route => route.isShow); 
+        const menu = (
+            <Menu>
+              <Menu.Item>
+                <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                    个人中心
+                </a>
+              </Menu.Item>
+              <Menu.Item>
+                <a target="_blank" rel="noopener noreferrer">
+                    退出
+                </a>
+              </Menu.Item> 
+            </Menu>
+          );
         return (
             <Layout>
                 <Header className="header" style={{background:'#1890ff'}}>
@@ -26,6 +35,12 @@ class Index extends React.Component {
                         <img className='logo-img' alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
                         <p className='logo-title'>react+antd</p>
                     </div>
+                    <Dropdown overlay={menu} placement="bottomRight">
+                        <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                         <p className="user-action">  admin </p>
+                           <DownOutlined />
+                        </a>
+                    </Dropdown>
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
                     {/* <Breadcrumb style={{ margin: '16px 0' }}>
@@ -39,7 +54,9 @@ class Index extends React.Component {
                                 mode="inline" 
                                 style={{ height: '100%' }}
                             > 
-                            {routes.map(r => { return (<Menu.Item key={r.path} onClick={r=>this.props.history.push(r.key)}>{r.title}</Menu.Item>) })}  
+                            {routes.map(r => { 
+                                return (<Menu.Item key={r.path} onClick={r=>this.props.history.push(r.key)}><Icon /> {r.title}</Menu.Item>) }
+                                )}  
                             </Menu>
                         </Sider>
                         <Content style={{ padding: '0 24px', minHeight: 280 }}>     {this.props.children}</Content>

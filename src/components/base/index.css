@@ -1,4 +1,4 @@
-#components-layout-demo-top-side .logo {
+ #components-layout-demo-top-side .logo {
     width: 120px;
     height: 31px;
     background: rgba(255, 255, 255, 0.2);
@@ -16,7 +16,19 @@
   .logo-title{
     color: #fff;
   }
+
+  .header{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .user-action{
+    color: #fff;
+  } 
   
   .site-layout-background {
     background: #fff;
+    font: bold;
+    font-size: 20px;
+    font-size-adjust: inherit;
   }
