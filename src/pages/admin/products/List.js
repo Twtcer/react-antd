@@ -1,28 +1,31 @@
-import React, { Component } from 'react';
+import React, { Component,useState,useEffect } from 'react';
 import { Card ,Table, Button ,Space,Popconfirm } from 'antd';
+import {list,add} from '../../../services/products';
+ 
 
 export class List extends Component {
 
-    queryData = ()=>{
-        let data = [
-            {
-                id: 1,
-                name: '宝岛香皂',
-                price: 6.66
-            },
-            {
-                id: 2,
-                name: '带吓唬虾皮',
-                price: 8.88
-            },
-            {
-                id: 3,
-                name: '小浣熊',
-                price: 8.66
-            }
-        ];
-        return data;
-    }
+   await queryData = ()=>{
+      await list().then(res => { 
+              res.data;
+        });         
+    };
+ 
+
+    useEffect=() => {
+        // props.dispatch(
+        //     // 使用对象作为参数
+        //     loadProduct({
+        //         page: 1, 
+        //     })
+        // )
+
+        list().then(res => {
+            console.log('获取数据库数据, 如果有的话 = ', res)
+            // setDataSource(res.products)
+            // setTotal(res.totalCount)
+        })
+    };
 
     render() {
         const data = this.queryData();

@@ -8,29 +8,29 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-    config.headers['authorization'] = 'Bearer ' + getToken;
+    config.headers['authorization'] = 'Bearer ' + getToken();
     return config;
 }, (error) => {
     return Promise.reject(error);
 }
 );
 
-instance.interceptors.response.use((response) => {
+instance.interceptors.response.use((response)=>{
     return response.data;
 },
-    (error) => {
-        return Promise.reject(error);
-    }
+(error)=>{
+    return Promise.reject(error);
+}
 );
 
 export function get(url, params) {
-    return axios.get(url, { params });
+    return instance.get(url, { params });
 }
 
 export function post(url, data) {
-    return axios.post(url, data);
+    return instance.post(url, data);
 }
 
 export function del(url) {
-    return axios.delete(url);
+    return instance.delete(url);
 }
