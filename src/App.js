@@ -8,9 +8,9 @@ import { isLogined } from './utils/auth';
 export default class App extends Component { 
   
   componentWillMount(){
-    if(isLogined()){ 
-      this.props.history.push('/admin/dashboard');
-    }
+    // if(isLogined()){ 
+    //   this.props.history.push('/admin/dashboard');
+    // }
   }
 
   render() {

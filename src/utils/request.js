@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { baseUrl } from './config';
+import { serviceUrl } from './config';
 import { getToken } from './auth';
 
 const instance = axios.create({
-    baseURL: baseUrl,
+    baseURL: serviceUrl,
     timeout: 5000
 });
 
@@ -29,6 +29,15 @@ export function get(url, params) {
 
 export function post(url, data) {
     return instance.post(url, data);
+}
+
+/**
+ * put
+ * @param {*} url     请求地址
+ * @param {*} data    数据
+ */
+export function put(url, data) {
+    return instance.put(url, data);
 }
 
 export function del(url) {

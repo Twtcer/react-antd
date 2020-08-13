@@ -1,7 +1,11 @@
-import { get, post, del } from '../utils/request';
+import { get, post, del, put } from '../utils/request';
 
-function list(page = 1) {
-    return get("/api/v1/admin/products", { page });
+function query(page = 1, per = 2) {
+    return get("/api/v1/admin/products", { page, per });
+}
+
+function getOneById(id) {
+    return get(`/api/v1/admin/products/${id}`);
 }
 
 function add(product) {
@@ -9,17 +13,23 @@ function add(product) {
 }
 
 function edit(id, product) {
-    post(`/api/v1/admin/products/${id}`, product);
+    return put(`/api/v1/admin/products/${id}`, product);
 }
 
 function delOne(id) {
-    return del('/api/v1/admin/products', id);
+    return del(`/api/v1/admin/products/${id}`);
+}
+
+function modifOne(id, product) {
+    return put(`/api/v1/admin/products/${id}`, product);
 }
 
 export {
     add,
-    list,
+    query,
     delOne,
-    edit
+    edit,
+    getOneById,
+    modifOne
 }
 

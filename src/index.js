@@ -8,7 +8,7 @@ import App from './App';
 import { mainRoutes } from './routes';
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Router>
       <Switch>
         <Route path='/admin' render={routeProps => <App {...routeProps} />} />
@@ -18,10 +18,11 @@ ReactDOM.render(
             return <Route key={route.path} {...route}></Route>
           })
         }
+        <Redirect to='/admin' from='/' exact />
         <Redirect to='/404' />
       </Switch>
-    </Router>
-  </React.StrictMode>,
+    </Router>,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 
