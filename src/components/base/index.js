@@ -22,11 +22,14 @@ class Index extends React.Component {
                     clearToken();
                     this.props.history.push('/login');
                 }
+                else if(p.key=="notice"){
+                    this.props.history.push('/admin/notices');
+                }
                 else{
                     message.info(p.key);
                 }
             }}>
-                <Menu.Item key="notify">通知</Menu.Item>
+                <Menu.Item key="notice">通知</Menu.Item>
                 <Menu.Item key="self">个人中心</Menu.Item>
                 <Menu.Item key="logout">退出</Menu.Item>
             </Menu>
@@ -39,7 +42,8 @@ class Index extends React.Component {
                     </div>
                     <Dropdown overlay={menu} placement="bottomRight">
                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                            <p className="user-action"> <Badge count={1}>
+                            <p className="user-action"> 
+                            <Badge dot>
                                 <Avatar icon={<UserOutlined />} />
                             </Badge> Admin </p>
                             <DownOutlined />

@@ -18,16 +18,14 @@ import { Card, List, Typography, Button  } from "antd";
         }
     }
 
-    readAll=()=>{
-        this.state({isAllRead:!this.state.isAllRead});
+    readAll=()=>{ 
+        this.setState({isAllRead:!this.state.isAllRead});
     }
 
     render() {
         return (
             <Card title='通知中心' 
-            extra={<Button onClick={() => {
-
-            }}>{this.state.isAllRead ? '全部已读' : '全部未读'}</Button>}>
+            extra={<Button onClick={this.readAll}>{this.state.isAllRead ? '全部已读' : '全部未读'}</Button>}>
                 <List
                     header={<div>Header</div>}
                     footer={<div>Footer</div>}
@@ -37,7 +35,7 @@ import { Card, List, Typography, Button  } from "antd";
                         <List.Item
                             style={{ display: "flex", alignContent: "spaced-between" }}
                         >
-                            <Typography.Text mark>[ITEM]</Typography.Text> {item}
+                            <Typography.Text mark>[item]</Typography.Text> {item}
                             <Button size="small">{this.state.isAllRead ? '已读' : '未读'}</Button>
                         </List.Item>
                     )}

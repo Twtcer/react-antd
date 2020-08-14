@@ -27,7 +27,7 @@ class List extends Component {
         query(page,per).then(res=>{
             _this.setState({ list: res.products,total:res.totalCount, loading: false });            
         }).catch(err=>{
-            message.err("获取数据失败,err:"+err);
+            message.error("获取数据失败,err:"+err);
         }); 
     };   
 

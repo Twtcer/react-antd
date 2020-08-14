@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Card, Input, InputNumber, Button, Spin, Upload, message } from 'antd';
+import { Form, Card, Input, InputNumber, Button, Spin,Space, Upload, message } from 'antd';
+import { FormInstance } from 'antd/lib/form';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { add, edit, getOneById } from '../../../services/products';
 import { serviceUrl } from '../../../utils/config'
@@ -22,14 +23,12 @@ const validateMessages = {
 
 class Edit extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            loading: true,
-            name: '',
-            price: 0,
-            id: '',
-            imageUrl: ''
+            loading: true,  
+            imageUrl: '',
+            formRef: React.createRef() 
         }
     }
 
@@ -37,9 +36,9 @@ class Edit extends Component {
         const params = this.props.match.params;
         if (params.id) {
             this.setState({ id: params.id });
-            getOneById(params.id).then(res => {
-                debugger
-                this.setState({ loading: false, name: res.name, price: res.price });
+            getOneById(params.id).then(res => { 
+                this.setState({ loading: false,  imageUrl: res.coverImg });
+                this.state.formRef.current.setFieldsValue(res);
             });
         }
         else {
@@ -71,22 +70,27 @@ class Edit extends Component {
             return;
         }
 
-        if (info.file.status === "done") {
-            this.getBase64(info.file.originFileObj, imageUrl => {
-                this.setState({
-                    imageUrl,
-                    loading: false,
-                });
-            });
+        if (info.file.status === "done") { 
+            this.setState({
+                        imageUrl: info.file.response.info,
+                        loading: false,
+                    });
+            // this.getBase64(info.file.originFileObj, imageUrl => {
+            //     this.setState({
+            //         imageUrl,
+            //         loading: false,
+            //     });
+            // });
         }
     }
 
 
 
     onFinish = (values) => {
-        if (this.props.match.params.id) {
-            //call add api
-            add(values.product).then(res => {
+        const {imageUrl} = this.state;
+        if (!this.props.match.params.id) { 
+            //call add api    
+            add({...values,coverImg:imageUrl}).then(res => {
                 message.info('add success!');
                 this.props.history.push("/admin/products");
             }).catch(err => {
@@ -95,7 +99,7 @@ class Edit extends Component {
         }
         else {
             //call edit api
-            edit(this.props.match.params.id, values.product).then(res => {
+            edit(this.props.match.params.id, {...values,coverImg:imageUrl}).then(res => {
                 message.info('modify success!');
                 this.props.history.push("/admin/products");
             }).catch(err => {
@@ -109,19 +113,24 @@ class Edit extends Component {
     };
 
     onReset = () => {
-        // this.formRef.current.resetFields();
+        this.state.formRef.current.resetFields();
+        this.setState({imageUrl:''});
     };
 
     onFill = () => {
-        // this.formRef.current.setFieldsValue({
-        //   name: 'Hello world!',
-        //   price: 999,
-        // });
+        this.state.formRef.current.setFieldsValue({
+          name: 'Hello world!',
+          price: 999,
+        });
     };
 
-    render() {
+    resetFields=()=>{
+        this.state.formRef.current.resetFields();
+    }
 
-        const { loading, name, price, imageUrl } = this.state;
+    render() { 
+        const { loading, imageUrl, formRef } = this.state; 
+        console.log('reder:'+JSON.stringify(formRef)); 
         const uploadButton = (
             <div>
                 {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -137,39 +146,48 @@ class Edit extends Component {
                             onClick={() => { this.props.history.push("/admin/products") }}>返回</Button>
                     }>
                     <Form
-                        {...layout}
-                        name="product"
-                        initialValues={{ name, price }}
+                        // {...layout}
+                        name="product" 
+                        ref={formRef}
                         onFinish={this.onFinish}
                         onFinishFailed={this.onFinishFailed}
                         validateMessages={validateMessages}
-                    >
+                    >  
+                        <Form.Item name="name" label="名称" rules={[{ required: true }]}><Input placeholder="请输入商品名称" /></Form.Item>
+                        <Form.Item name="price" label="价格" rules={[{ required: true }, { type: 'number', min: 0, max: 9999 }]}><InputNumber placeholder="请输入价格" /></Form.Item>
 
-                        <Form.Item> <Upload
-                            name="avatar"
+                        <Form.Item label="主图" rules={[{ required: true }]}> 
+                        <Upload 
+                            
+                            name="file"
                             listType="picture-card"
                             className="avatar-uploader"
                             showUploadList={false}
-                            action={`{}`}
-                            beforeUpload={this.beforeUpload}
-                            onChange={this.handleUploadImg}
+                            action={`${serviceUrl}api/v1/common/file_upload`}
+                            // beforeUpload={this.beforeUpload}
+                            onChange={(info)=>this.handleUploadImg(info)}
                         >
-                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                            {imageUrl ? <img src={`${serviceUrl}${imageUrl}`} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload></Form.Item>
 
-                        <Form.Item name={['product', 'name']} label="名称" rules={[{ required: true }]}><Input placeholder="请输入商品名称" style={{ width: 200 }} /></Form.Item>
-                        <Form.Item name={['product', 'price']} label="价格" rules={[{ required: true }, { type: 'number', min: 0, max: 9999 }]}><InputNumber placeholder="请输入价格" /></Form.Item>
-
                         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                            <Button htmlType="submit" type="primary">
-                                提交
-                         </Button>
-                            <Button htmlType="submit" type="danger" onClick={this.resetFields}>
+                            <Space>
+                                <Button htmlType="submit" type="primary">
+                                    提交
+                                </Button>
+
+                                <Button htmlType="button" type="danger" onClick={this.resetFields}>
                                 重置
+                                </Button>
+ 
+                                <Button htmlType="button"  onClick={this.onFill}>
+                                测试数据
                          </Button>
-                            <Button htmlType="submit" type="default" onClick={this.onFill}>
-                                测试填充
-                         </Button>
+
+                                <Button htmlType="link" type="default" onClick={() => { this.props.history.push("/admin/products") }}>
+                                    返回
+                             </Button>
+                            </Space>
                         </Form.Item>
                     </Form>
                 </Card>
