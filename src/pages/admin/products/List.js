@@ -4,8 +4,7 @@ import { serviceUrl } from '../../../utils/config';
 import {  query, delOne,modifOne } from '../../../services/products';   
 import './list.css'; 
 
-class List extends Component {
-
+class List extends Component {  
     constructor() {
         super(); 
         this.state = {

@@ -6,7 +6,7 @@ import { add, edit, getOneById } from '../../../services/products';
 import { serviceUrl } from '../../../utils/config'
 
 
-const layout = {
+const layout = { 
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
 };
