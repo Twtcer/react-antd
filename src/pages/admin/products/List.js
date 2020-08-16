@@ -1,33 +1,51 @@
 import React, { Component } from 'react';
 import { Card, Table, Button, Space, Popconfirm,message,Spin } from 'antd';
 import { serviceUrl } from '../../../utils/config';
-import {  query, delOne,modifOne } from '../../../services/products';   
+import {  query, delOne,modifOne } from '../../../services/products'; 
+ import { connect } from 'react-redux';
+ import {loadProduct} from '../../../store/actions/product';
+
 import './list.css'; 
 
 class List extends Component {  
-    constructor() {
-        super(); 
+    constructor(props) { 
+        super(props); 
         this.state = {
             // loading:true, 
-            list:[],
-            total:0,
-            currentPage:1,
+            list:props.list,
+            total:props.total,
+            currentPage:props.page,
             pageSize:5
         }
     } 
 
     componentDidMount(){
-        const {currentPage,pageCount} = this.state;
-        this.queryProducts(currentPage,pageCount);
+         const {currentPage,pageSize} = this.state;
+        // this.queryProducts(currentPage,pageCount);
+        this.props.dispatch(
+            loadProduct({
+                page:currentPage,
+                per: pageSize
+            })
+        );
     } 
 
     queryProducts=(page=1,per=5)=>{ 
-        let _this = this;
-        query(page,per).then(res=>{
-            _this.setState({ list: res.products,total:res.totalCount, loading: false });            
-        }).catch(err=>{
-            message.error("获取数据失败,err:"+err);
-        }); 
+        // let _this = this;
+        // query(page,per).then(res=>{
+        //     _this.setState({ list: res.products,total:res.totalCount });            
+        // }).catch(err=>{
+        //     message.error("获取数据失败,err:"+err);
+        // }); 
+
+        const {pageSize} = this.state;
+        this.props.dispatch(
+            // 使用对象作为参数
+            loadProduct({
+                page: page,
+                per:pageSize
+            })
+        )
     };   
 
     render() {
@@ -53,7 +71,7 @@ class List extends Component {
                 dataIndex: 'coverImg',
                 render: (text, record, index) =>
                     record.coverImg ?
-                        (<img src={serviceUrl + record.coverImg} alt={record.name} style={{ width: '120px' }} />) :
+                        (<img src={serviceUrl + record.coverImg} alt={record.name} style={{ width: '120px',height:'50%' }} />) :
                         ('暂无图片')
             },
             {
@@ -153,4 +171,4 @@ class List extends Component {
     }
 }
 
-export default List
+export default connect(state=>state.products) (List);

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Card, Input, InputNumber, Button, Spin,Space, Upload, message } from 'antd';
-import { FormInstance } from 'antd/lib/form';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { add, edit, getOneById } from '../../../services/products';
-import { serviceUrl } from '../../../utils/config'
+import { serviceUrl } from '../../../utils/config';
+import BraftEditor from 'braft-editor'
+import 'braft-editor/dist/index.css';
 
 
 const layout = { 
@@ -26,9 +27,10 @@ class Edit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,  
+            loading: true,
             imageUrl: '',
-            formRef: React.createRef() 
+            formRef: React.createRef(),
+            editorState: BraftEditor.createEditorState(null), 
         }
     }
 
@@ -36,15 +38,29 @@ class Edit extends Component {
         const params = this.props.match.params;
         if (params.id) {
             this.setState({ id: params.id });
-            getOneById(params.id).then(res => { 
-                this.setState({ loading: false,  imageUrl: res.coverImg });
-                this.state.formRef.current.setFieldsValue(res);
+            getOneById(params.id).then(res => {    
+                this.setState({ loading: false, imageUrl: res.coverImg, editorState: BraftEditor.createEditorState(res.content) });
+                this.state.formRef.current.setFieldsValue({
+                    name: res.name,
+                    price: res.price,
+                    imageUrl: res.coverImg
+                });
             });
         }
         else {
             this.setState({ loading: false });
         }
     }
+
+    //富文本编辑器
+    handleEditorChange = (editorState) => {  
+        this.setState({ editorState: editorState });
+        // this.state.formRef.setFieldsValue({
+        //     content: editorState
+        // });
+    }
+
+
 
     getBase64 = (img, callback) => {
         const reader = new FileReader();
@@ -74,7 +90,7 @@ class Edit extends Component {
             this.setState({
                         imageUrl: info.file.response.info,
                         loading: false,
-                    });
+                    }); 
             // this.getBase64(info.file.originFileObj, imageUrl => {
             //     this.setState({
             //         imageUrl,
@@ -87,10 +103,11 @@ class Edit extends Component {
 
 
     onFinish = (values) => {
-        const {imageUrl} = this.state;
+        debugger
+        const { imageUrl, editorState } = this.state;
         if (!this.props.match.params.id) { 
             //call add api    
-            add({...values,coverImg:imageUrl}).then(res => {
+            add({...values,coverImg:imageUrl,content:editorState.toHTML()}).then(res => {
                 // message.info('add success!');
                 this.props.history.push("/admin/products");
             }).catch(err => {
@@ -99,7 +116,7 @@ class Edit extends Component {
         }
         else {
             //call edit api
-            edit(this.props.match.params.id, {...values,coverImg:imageUrl}).then(res => {
+            edit(this.props.match.params.id, {...values,coverImg:imageUrl,content:editorState.toHTML()}).then(res => {
                 // message.info('modify success!');
                 this.props.history.push("/admin/products");
             }).catch(err => {
@@ -119,8 +136,9 @@ class Edit extends Component {
 
     onFill = () => {
         this.state.formRef.current.setFieldsValue({
-          name: 'Hello world!',
+          name: '测试商品0012222',
           price: 999,
+          content: '<p>test</p>'
         });
     };
 
@@ -129,7 +147,7 @@ class Edit extends Component {
     }
 
     render() { 
-        const { loading, imageUrl, formRef } = this.state; 
+        const { loading, imageUrl, formRef , editorState} = this.state; 
         console.log('reder:'+JSON.stringify(formRef)); 
         const uploadButton = (
             <div>
@@ -168,6 +186,14 @@ class Edit extends Component {
                         >
                             {imageUrl ? <img src={`${serviceUrl}${imageUrl}`} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload></Form.Item>
+
+                        <Form.Item label="详情" rules={[{required: true}]}>
+                        <BraftEditor 
+                            value={editorState} 
+                            onChange={(e) => this.handleEditorChange(e)} 
+                            placeholder="请填写描述内容"
+                            />
+                        </Form.Item>
 
                         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                             <Space>
