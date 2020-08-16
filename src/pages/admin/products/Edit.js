@@ -91,7 +91,7 @@ class Edit extends Component {
         if (!this.props.match.params.id) { 
             //call add api    
             add({...values,coverImg:imageUrl}).then(res => {
-                message.info('add success!');
+                // message.info('add success!');
                 this.props.history.push("/admin/products");
             }).catch(err => {
                 message.error(`add failed,${err}`);
@@ -100,7 +100,7 @@ class Edit extends Component {
         else {
             //call edit api
             edit(this.props.match.params.id, {...values,coverImg:imageUrl}).then(res => {
-                message.info('modify success!');
+                // message.info('modify success!');
                 this.props.history.push("/admin/products");
             }).catch(err => {
                 message.error(`modify failed,${err}`);

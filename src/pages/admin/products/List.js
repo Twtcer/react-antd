@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import { Card, Table, Button, Space, Popconfirm,message,Spin } from 'antd';
 import { serviceUrl } from '../../../utils/config';
 import {  query, delOne,modifOne } from '../../../services/products';   
@@ -138,7 +138,7 @@ class List extends Component {
                         hideOnSinglePage:false,
                         // pageSizeOptions:[10, 20, 50, 100], 
                         onChange:(page, pageSize)=>{ 
-                            _this.setState({loading:true});
+                            // _this.setState({loading:true});
                             _this.queryProducts(page,pageSize);
                         }
                     }}

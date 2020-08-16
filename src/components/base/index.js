@@ -1,18 +1,27 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Dropdown, Avatar, Badge,message } from 'antd';
+import { Layout, Menu, Breadcrumb, Dropdown, Avatar, Badge, message } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import Icon from '@ant-design/icons';
 import './index.css';
 import { adminRoutes } from '../../routes/index';
 import { clearToken } from '../../utils/auth';
+import { connect } from 'react-redux';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 class Index extends React.Component {
-    state = {
-        collapsed: false,
-    };
+
+    constructor(props)
+    {
+        super(props);
+        console.log(props);
+        this.state = {
+            collapsed: false,
+        };
+    }
+
+   
 
     render() {
         const routes = adminRoutes.filter(route => route.isShow);
@@ -22,10 +31,10 @@ class Index extends React.Component {
                     clearToken();
                     this.props.history.push('/login');
                 }
-                else if(p.key=="notice"){
+                else if (p.key == "notice") {
                     this.props.history.push('/admin/notices');
                 }
-                else{
+                else {
                     message.info(p.key);
                 }
             }}>
@@ -42,10 +51,10 @@ class Index extends React.Component {
                     </div>
                     <Dropdown overlay={menu} placement="bottomRight">
                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                            <p className="user-action"> 
-                            <Badge dot>
-                                <Avatar icon={<UserOutlined />} />
-                            </Badge> Admin </p>
+                            <p className="user-action">
+                                <Badge dot={!this.props.isAllRead}>
+                                    <Avatar icon={<UserOutlined />} />
+                                </Badge> Admin </p>
                             <DownOutlined />
                         </a>
                     </Dropdown>
@@ -78,4 +87,6 @@ class Index extends React.Component {
     }
 }
 
-export default withRouter(Index);
+const mapStateToProps = state => state.notice;
+
+export default connect(mapStateToProps)(withRouter(Index));

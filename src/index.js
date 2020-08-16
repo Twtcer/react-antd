@@ -4,11 +4,14 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import App from './App';
+import store from './store/index';
 
 import { mainRoutes } from './routes';
+import { Provider } from 'react-redux';
 
 ReactDOM.render(
   // <React.StrictMode>
+  <Provider store={store}>
     <Router>
       <Switch>
         <Route path='/admin' render={routeProps => <App {...routeProps} />} />
@@ -21,7 +24,9 @@ ReactDOM.render(
         <Redirect to='/admin' from='/' exact />
         <Redirect to='/404' />
       </Switch>
-    </Router>,
+    </Router>
+    </Provider>
+    ,
   // </React.StrictMode>,
   document.getElementById('root')
 );
