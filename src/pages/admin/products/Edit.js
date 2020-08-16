@@ -157,8 +157,7 @@ class Edit extends Component {
                         <Form.Item name="price" label="价格" rules={[{ required: true }, { type: 'number', min: 0, max: 9999 }]}><InputNumber placeholder="请输入价格" /></Form.Item>
 
                         <Form.Item label="主图" rules={[{ required: true }]}> 
-                        <Upload 
-                            
+                        <Upload  
                             name="file"
                             listType="picture-card"
                             className="avatar-uploader"

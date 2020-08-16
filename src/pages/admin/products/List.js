@@ -8,11 +8,11 @@ class List extends Component {
     constructor() {
         super(); 
         this.state = {
-            loading:true, 
+            // loading:true, 
             list:[],
             total:0,
             currentPage:1,
-            pageSize:2
+            pageSize:5
         }
     } 
 
@@ -21,7 +21,7 @@ class List extends Component {
         this.queryProducts(currentPage,pageCount);
     } 
 
-    queryProducts=(page=1,per=2)=>{ 
+    queryProducts=(page=1,per=5)=>{ 
         let _this = this;
         query(page,per).then(res=>{
             _this.setState({ list: res.products,total:res.totalCount, loading: false });            
@@ -34,7 +34,7 @@ class List extends Component {
         let _this = this;
         const {
              list, 
-            loading,
+            // loading,
             total,
             pageSize,
         } = this.state;
@@ -131,7 +131,7 @@ class List extends Component {
             >新增</Button>}>
                 <Table
                     rowKey="_id"
-                    loading={loading}
+                    // loading={loading}
                     pagination={{
                         total,
                         defaultPageSize:pageSize, 

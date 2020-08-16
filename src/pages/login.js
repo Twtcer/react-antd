@@ -9,7 +9,7 @@ import './login.css';
 class Login extends Component {
 
     onFinish = (values) => {
-        console.log('Received values of form: ', JSON.stringify(values));
+        // console.log('Received values of form: ', JSON.stringify(values));
         // setToken(values.username);
         // this.props.history.push('/admin');
         login(values).then(res => { 
