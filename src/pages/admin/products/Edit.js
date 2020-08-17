@@ -3,7 +3,7 @@ import { Form, Card, Input, InputNumber, Button, Spin,Space, Upload, message } f
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { add, edit, getOneById } from '../../../services/products';
 import { serviceUrl } from '../../../utils/config';
-import BraftEditor from 'braft-editor'
+import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
 
 
