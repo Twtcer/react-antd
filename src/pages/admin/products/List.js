@@ -11,21 +11,28 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            pageSize: 5
         }
     }
 
     componentDidMount() {
-        const { page, pages, total, list } = this.props;
+        const { page, pages, totalCount, list } = this.props;
         // this.queryProducts(currentPage,pageCount);
         this.props.dispatch(
             loadProduct({
                 page: page,
-                per: pages
+                per: this.state.pageSize
             })
         );
     }
 
-    queryProducts = (page =1, per = 2) => {
+    changePageSize = (current, pageSize)=>{
+        console.log(current, pageSize); 
+        this.setState({pageSize:pageSize});
+        // this.queryProducts(1,pageSize ); 
+    }
+
+    queryProducts = (page = 1,per) => {
         // let _this = this;
         // query(page,per).then(res=>{
         //     _this.setState({ list: res.products,total:res.totalCount });            
@@ -37,14 +44,13 @@ class List extends Component {
             // 使用对象作为参数
             loadProduct({
                 page: page,
-                per: per
+                per: per ? this.state.pageSize : per
             })
         )
     };
 
     render() {
-        const { page, pages, total, list } = this.props;
-
+        const { page, pages, total, list, per } = this.props; 
         const columns = [
             {
                 title: '序号',
@@ -139,13 +145,18 @@ class List extends Component {
                     rowKey="_id"
                     // loading={loading}
                     pagination={{
-                        total,
-                        defaultPageSize: pages,
-                        hideOnSinglePage: false,
-                        // pageSizeOptions:[10, 20, 50, 100], 
-                        onChange: (page, pageSize) => {
-                            // _this.setState({loading:true});
-                            this.queryProducts(page, pageSize);
+                        total: total,
+                        defaultCurrent: page,
+                        defaultPageSize: this.state.pageSize,
+                        pageSize: this.state.pageSize,
+                        hideOnSinglePage: true,
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        pageSizeOptions: [5,10, 20, 50, 100],
+                        onShowSizeChange: (current, pageSize) =>this.changePageSize(current,pageSize),
+                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                        onChange: (page) => {
+                            this.queryProducts(page, this.state.pageSize);
                         }
                     }}
                     rowClassName={(record) => { return record.onSale ? "" : "bg-red" }}

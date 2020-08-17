@@ -10,7 +10,7 @@ export default (state = { list: [], page: 1, total: 0 }, action) => {
                 pages: action.playload.pages,
                 total: action.playload.totalCount
             };
-            console.log('state = ', data);
+            // console.log('state = ', data);
             return data;
         default:
             return state
