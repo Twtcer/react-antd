@@ -30,6 +30,7 @@ const instance = axios.create({
 instance.interceptors.request.use((config) => {
     //token
     config.headers['authorization'] = 'Bearer ' + getToken();
+    config.headers['Origin'] = 'http://localhost:13571';
     //loading 
     loading = message.loading({content: 'Loading...',duration: 0});
 
